@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMate - AI-Powered Study Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #764ba2;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            background: white;
+            color: #667eea;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Feature Cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Content Card */
+        .content-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        .content-card h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        textarea, select, input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        textarea:focus, select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        /* Session List */
+        .session-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .session-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-type {
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Quiz Styles */
+        .quiz-question {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quiz-option {
+            background: white;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .quiz-option.selected {
+            border-color: #667eea;
+            background: #e8eeff;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        /* Flashcard */
+        .flashcard {
+            perspective: 1000px;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            min-height: 300px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flashcard-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            min-height: 300px;
+            backface-visibility: hidden;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .flashcard-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Output Display */
+        .output-display {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+
+        .output-display h3 {
+            color: #667eea;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .output-display ul {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .output-display li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a onclick="showSection('home')">Home</a></li>
+            <li><a onclick="showSection('app')">Study App</a></li>
+            <li><a onclick="showSection('dashboard')">Dashboard</a></li>
+            <li><a onclick="showSection('quiz')">Quiz</a></li>
+            <li><a onclick="showSection('flashcards')">Flashcards</a></li>
+        </ul>
+    </nav>
+
+    <!-- HOME SECTION -->
+    <div id="home" class="section active">
+        <div class="hero">
+            <h1>📚 StudyMate</h1>
+            <p>Your AI-Powered Study Companion</p>
+            <button class="cta-button" onclick="showSection('app')">Start Studying Now</button>
+        </div>
+
+        <div class="container">
+            <div class="features">
+                <div class="feature-card">
+                    <h3>📖 Study Guides</h3>
+                    <p>Generate comprehensive study guides from your notes with AI-powered organization and key concepts.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>✅ MCQ Quizzes</h3>
+                    <p>Test your knowledge with automatically generated multiple-choice questions tailored to your content.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎴 Flashcards</h3>
+                    <p>Create interactive flashcards for quick review and memorization of important concepts.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 Analysis</h3>
+                    <p>Get detailed insights and analysis of your study materials with recommendations for improvement.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📈 Progress Tracking</h3>
+                    <p>Monitor your study sessions, quiz scores, and overall progress over time.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎯 Difficulty Levels</h3>
+                    <p>Choose from Easy, Medium, or Hard difficulty to match your learning needs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDY APP SECTION -->
+    <div id="app" class="section">
+        <div class="container">
+            <div class="content-card">
+                <h2>Create Study Materials</h2>
+                <form id="studyForm">
+                    <div class="form-group">
+                        <label for="notes">Your Study Notes:</label>
+                        <textarea id="notes" placeholder="Paste your notes here..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="outputMode">Output Type:</label>
+                        <select id="outputMode" required>
+                            <option value="">Select output type...</option>
+                            <option value="StudyGuide">Study Guide</option>
+                            <option value="Mcq">MCQ Quiz</option>
+                            <option value="Flashcards">Flashcards</option>
+                            <option value="Analysis">Content Analysis</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="difficulty">Difficulty Level:</label>
+                        <select id="difficulty" required>
+                            <option value="">Select difficulty...</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">Generate Study Material</button>
+                </form>
+
+                <div id="output" class="output-display hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD SECTION -->
+    <div id="dashboard" class="section">
+        <div class="container">
+            <div class="content-card">
+                <h2>Your Study Dashboard</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Study Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Study Guides</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Quizzes Taken</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Flashcard Sets</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: #667eea;">Recent Sessions</h3>
+                <div class="session-list">
+                    <div class="session-item">
+                        <div class="session-header">
+                            <strong>U.S. History - Major Wars</strong>
+                            <span class="session-type">Study Guide</span>
+                        </div>
+                        <p style="color: #666; font-size: 0.9rem;">Comprehensive guide covering Revolutionary War through modern conflicts</p>
+                    </div>
+                    <div class="session-item">
+                        <div class="session-header">
+                            <strong>U.S. History Notes</strong>
+                            <span class="session-type">Notes</span>
+                        </div>
+                        <p style="color: #666; font-size: 0.9rem;">Study notes on major U.S. wars and conflicts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUIZ SECTION -->
+    <div id="quiz" class="section">
+        <div class="container">
+            <div class="content-card">
+                <h2>Interactive Quiz</h2>
+                <p style="margin-bottom: 2rem; color: #666;">Test your knowledge with this sample quiz!</p>
+
+                <div id="quizContainer">
+                    <div class="quiz-question">
+                        <h3>Question 1 of 3</h3>
+                        <p style="font-size: 1.2rem; margin-top: 1rem;">What year did the American Revolutionary War begin?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q1', 'a')">A) 1765</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q1', 'b')">B) 1775</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q1', 'c')">C) 1783</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q1', 'd')">D) 1791</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h3>Question 2 of 3</h3>
+                        <p style="font-size: 1.2rem; margin-top: 1rem;">Which war is known as "The War Between the States"?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q2', 'a')">A) War of 1812</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q2', 'b')">B) Mexican-American War</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q2', 'c')">C) Civil War</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q2', 'd')">D) Spanish-American War</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h3>Question 3 of 3</h3>
+                        <p style="font-size: 1.2rem; margin-top: 1rem;">What event triggered U.S. entry into World War II?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q3', 'a')">A) Invasion of Poland</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q3', 'b')">B) Pearl Harbor Attack</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q3', 'c')">C) D-Day Invasion</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q3', 'd')">D) Battle of Midway</div>
+                        </div>
+                    </div>
+
+                    <button onclick="submitQuiz()" style="margin-top: 2rem;">Submit Quiz</button>
+                </div>
+
+                <div id="quizResults" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLASHCARDS SECTION -->
+    <div id="flashcards" class="section">
+        <div class="container">
+            <div class="content-card">
+                <h2>Study Flashcards</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 1rem;">Click card to flip</p>
+
+                <div class="flashcard">
+                    <div class="flashcard-inner" id="flashcardInner" onclick="flipCard()">
+                        <div class="flashcard-front">
+                            <h3 id="flashcardQuestion">What was the main cause of the American Revolutionary War?</h3>
+                        </div>
+                        <div class="flashcard-back">
+                            <p id="flashcardAnswer">Taxation without representation and colonial desire for independence from British rule.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flashcard-controls">
+                    <button onclick="previousCard()">← Previous</button>
+                    <span id="cardCounter" style="color: white; font-weight: 600;">Card 1 of 5</span>
+                    <button onclick="nextCard()">Next →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Study Form
+        document.getElementById('studyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const notes = document.getElementById('notes').value;
+            const outputMode = document.getElementById('outputMode').value;
+            const difficulty = document.getElementById('difficulty').value;
+
+            const output = document.getElementById('output');
+            output.classList.remove('hidden');
+
+            // Simulate AI generation
+            let content = '';
+            
+            if (outputMode === 'StudyGuide') {
+                content = generateStudyGuide(notes, difficulty);
+            } else if (outputMode === 'Mcq') {
+                content = generateMCQ(notes, difficulty);
+            } else if (outputMode === 'Flashcards') {
+                content = generateFlashcards(notes, difficulty);
+            } else if (outputMode === 'Analysis') {
+                content = generateAnalysis(notes);
+            }
+
+            output.innerHTML = content;
+        });
+
+        function generateStudyGuide(notes, difficulty) {
+            return `
+                <h3>📖 Study Guide Generated (${difficulty} Level)</h3>
+                <p><strong>Based on your notes:</strong></p>
+                <p>${notes.substring(0, 100)}...</p>
+                
+                <h3>Key Concepts:</h3>
+                <ul>
+                    <li>Main topic identification and overview</li>
+                    <li>Critical themes and patterns</li>
+                    <li>Important dates and events</li>
+                    <li>Cause and effect relationships</li>
+                </ul>
+
+                <h3>Study Tips:</h3>
+                <ul>
+                    <li>Review key concepts daily</li>
+                    <li>Create connections between topics</li>
+                    <li>Practice with flashcards</li>
+                    <li>Test yourself with quizzes</li>
+                </ul>
+            `;
+        }
+
+        function generateMCQ(notes, difficulty) {
+            return `
+                <h3>✅ MCQ Quiz Generated (${difficulty} Level)</h3>
+                <p>5 questions have been created based on your notes.</p>
+                <p><em>Navigate to the Quiz section to take the test!</em></p>
+                <button onclick="showSection('quiz')" style="margin-top: 1rem;">Go to Quiz →</button>
+            `;
+        }
+
+        function generateFlashcards(notes, difficulty) {
+            return `
+                <h3>🎴 Flashcards Generated (${difficulty} Level)</h3>
+                <p>5 flashcard pairs have been created from your notes.</p>
+                <p><em>Navigate to the Flashcards section to study!</em></p>
+                <button onclick="showSection('flashcards')" style="margin-top: 1rem;">View Flashcards →</button>
+            `;
+        }
+
+        function generateAnalysis(notes) {
+            const wordCount = notes.split(/\s+/).length;
+            return `
+                <h3>📊 Content Analysis</h3>
+                
+                <h3>Statistics:</h3>
+                <ul>
+                    <li>Word Count: ${wordCount}</li>
+                    <li>Estimated Reading Time: ${Math.ceil(wordCount / 200)} minutes</li>
+                    <li>Complexity Level: Medium</li>
+                </ul>
+
+                <h3>Key Insights:</h3>
+                <ul>
+                    <li>Content covers multiple related topics</li>
+                    <li>Good balance of facts and context</li>
+                    <li>Suitable for comprehensive study</li>
+                </ul>
+
+                <h3>Recommendations:</h3>
+                <ul>
+                    <li>Create flashcards for key terms</li>
+                    <li>Generate practice quizzes</li>
+                    <li>Review in 2-3 study sessions</li>
+                </ul>
+            `;
+        }
+
+        // Quiz functionality
+        const quizAnswers = {
+            q1: null,
+            q2: null,
+            q3: null
+        };
+
+        const correctAnswers = {
+            q1: 'b',
+            q2: 'c',
+            q3: 'b'
+        };
+
+        function selectOption(element, question, answer) {
+            // Deselect all options for this question
+            element.parentElement.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Select this option
+            element.classList.add('selected');
+            quizAnswers[question] = answer;
+        }
+
+        function submitQuiz() {
+            let correct = 0;
+            let total = 3;
+
+            // Check answers and show results
+            Object.keys(quizAnswers).forEach(q => {
+                if (quizAnswers[q] === correctAnswers[q]) {
+                    correct++;
+                }
+            });
+
+            // Show visual feedback
+            document.querySelectorAll('.quiz-question').forEach((question, index) => {
+                const qKey = 'q' + (index + 1);
+                const options = question.querySelectorAll('.quiz-option');
+                
+                options.forEach((opt, optIndex) => {
+                    const optLetter = ['a', 'b', 'c', 'd'][optIndex];
+                    if (optLetter === correctAnswers[qKey]) {
+                        opt.classList.add('correct');
+                    } else if (optLetter === quizAnswers[qKey] && quizAnswers[qKey] !== correctAnswers[qKey]) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            });
+
+            const percentage = Math.round((correct / total) * 100);
+            
+            document.getElementById('quizResults').innerHTML = `
+                <div class="score-display">
+                    <h2>Quiz Complete!</h2>
+                    <div class="score-number">${percentage}%</div>
+                    <p style="font-size: 1.2rem;">You got ${correct} out of ${total} correct!</p>
+                    <button onclick="resetQuiz()" style="margin-top: 1rem; background: white; color: #667eea;">Try Again</button>
+                </div>
+            `;
+            
+            document.getElementById('quizResults').classList.remove('hidden');
+            document.getElementById('quizContainer').style.opacity = '0.6';
+        }
+
+        function resetQuiz() {
+            // Reset answers
+            Object.keys(quizAnswers).forEach(key => {
+                quizAnswers[key] = null;
+            });
+
+            // Remove all classes
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Hide results
+            document.getElementById('quizResults').classList.add('hidden');
+            document.getElementById('quizContainer').style.opacity = '1';
+        }
+
+        // Flashcard functionality
+        const flashcards = [
+            {
+                question: "What was the main cause of the American Revolutionary War?",
+                answer: "Taxation without representation and colonial desire for independence from British rule."
+            },
+            {
+                question: "When did the Civil War take place?",
+                answer: "1861-1865, fought between the Union (North) and Confederacy (South)."
+            },
+            {
+                question: "What was the significance of Pearl Harbor?",
+                answer: "The December 7, 1941 attack brought the United States into World War II."
+            },
+            {
+                question: "What was the Cold War?",
+                answer: "A period of geopolitical tension between the US and Soviet Union from 1947-1991, characterized by proxy wars and ideological conflict."
+            },
+            {
+                question: "What triggered the War of 1812?",
+                answer: "British interference with American shipping and impressment of American sailors."
+            }
+        ];
+
+        let currentCard = 0;
+
+        function flipCard() {
+            document.getElementById('flashcardInner').classList.toggle('flipped');
+        }
+
+        function updateCard() {
+            const card = flashcards[currentCard];
+            document.getElementById('flashcardQuestion').textContent = card.question;
+            document.getElementById('flashcardAnswer').textContent = card.answer;
+            document.getElementById('cardCounter').textContent = `Card ${currentCard + 1} of ${flashcards.length}`;
+            
+            // Remove flip if card is flipped
+            document.getElementById('flashcardInner').classList.remove('flipped');
+        }
+
+        function nextCard() {
+            if (currentCard < flashcards.length - 1) {
+                currentCard++;
+                updateCard();
+            }
+        }
+
+        function previousCard() {
+            if (currentCard > 0) {
+                currentCard--;
+                updateCard();
+            }
+        }
+    </script>
+</body>
+</html>
